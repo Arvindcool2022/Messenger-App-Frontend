@@ -54,7 +54,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Mail className="size-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold"> Messenger Inc.</span>
+                  <span className="font-semibold"> Chattr Inc.</span>
                 </div>
               </a>
             </SidebarMenuButton>

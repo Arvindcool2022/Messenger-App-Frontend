@@ -2,13 +2,36 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { NavLink } from "react-router";
+import { ForgotPass } from "./Forgot-pass";
+import { useForm, UseFormReturn } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginResolvers } from "../resolvers";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { ReactNode } from "react";
 
 export default function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const form = useForm<z.infer<typeof loginResolvers>>({
+    resolver: zodResolver(loginResolvers),
+    defaultValues: { username: "", password: "" },
+  });
+
+  function onSubmit(values: z.infer<typeof loginResolvers>) {
+    console.log(values);
+    form.reset();
+  }
+
   return (
     <div
       className={cn("flex flex-col justify-center gap-6", className)}
@@ -19,41 +42,92 @@ export default function LoginForm({
           <CardTitle className="text-xl">Login</CardTitle>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="grid gap-6">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
               <div className="grid gap-6">
-                <div className="grid gap-2">
-                  <Label htmlFor="username">Username</Label>
-                  <Input
-                    id="username"
-                    type="username"
-                    placeholder="johndoe@123"
+                <div className="grid gap-6">
+                  <FormFieldConstructor
+                    form={form}
+                    name="username"
+                    label="Username"
+                    placeholder="John_Doe@123"
                   />
+                  <FormFieldConstructor
+                    form={form}
+                    name="password"
+                    type="password"
+                    label="Password"
+                  >
+                    <div className="flex justify-end">
+                      <ForgotPass />
+                    </div>
+                  </FormFieldConstructor>
+
+                  <Button type="submit" className="w-full">
+                    Login
+                  </Button>
                 </div>
-                <div className="grid gap-2">
-                  <div className="flex items-center">
-                    <Label htmlFor="password">Password</Label>
-                  </div>
-                  <Input id="password" type="password" required />
+                <div className="text-center text-sm">
+                  Don&apos;t have an account?{" "}
+                  <NavLink
+                    to="/signup"
+                    end
+                    className="underline underline-offset-4"
+                  >
+                    Sign up
+                  </NavLink>
                 </div>
-                <Button type="submit" className="w-full">
-                  Login
-                </Button>
               </div>
-              <div className="text-center text-sm">
-                Don&apos;t have an account?{" "}
-                <NavLink
-                  to="/signup"
-                  end
-                  className="underline underline-offset-4"
-                >
-                  Sign up
-                </NavLink>
-              </div>
-            </div>
-          </form>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </div>
   );
 }
+
+type nameSchema = keyof z.infer<typeof loginResolvers>;
+
+interface TFormFieldConstructor {
+  form: UseFormReturn<
+    {
+      username: string;
+      password: string;
+    },
+    any,
+    undefined
+  >;
+  name: nameSchema;
+  label: string;
+  placeholder?: string;
+  type?: string;
+  children?: ReactNode;
+}
+
+const FormFieldConstructor = ({
+  form,
+  name,
+  label,
+  placeholder = "",
+  type = "text",
+  children = null,
+}: TFormFieldConstructor) => {
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <div className="grid gap-2">
+          <FormItem>
+            <FormLabel>{label}</FormLabel>
+            <FormControl>
+              <Input type={type} placeholder={placeholder} {...field} />
+            </FormControl>
+            <FormMessage />
+            {children}
+          </FormItem>
+        </div>
+      )}
+    />
+  );
+};

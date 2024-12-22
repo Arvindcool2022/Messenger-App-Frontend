@@ -10,7 +10,7 @@ export default function Wrapper({ children }: { children: ReactNode }) {
           <div className="flex h-6 w-6 items-center justify-center rounded-md bg-teal-800 text-primary-foreground dark:bg-teal-300">
             <Mail className="size-4" />
           </div>
-          Messenger Inc.
+          Chattr Inc.
         </a>
         {children}
       </div>
