@@ -1,10 +1,10 @@
 import { Route, Routes } from "react-router";
 import { ThemeProvider } from "@/components/Theming/theme-provider";
 import Navigation from "./components/nav";
-import Register from "./components/Register";
-import LoginForm from "./components/Login-form";
-import LandingPage from "./components/LandingPAge";
-import Page from "./app/dashboard/page";
+import LandingPage from "./components/LandingPage";
+import Dashboard from "./app/main";
+import LoginPage from "./app/login";
+import SignupPage from "./app/register";
 
 const App = () => {
   return (
@@ -13,15 +13,9 @@ const App = () => {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route element={<Navigation />}>
-            <Route
-              path="/login"
-              element={<LoginForm className="mx-auto mt-2 h-full max-w-96" />}
-            />
-            <Route
-              path="/signup"
-              element={<Register className="mx-auto mt-2 h-full max-w-96" />}
-            />
-            <Route path="/app/:id?" element={<Page />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/app/:id?" element={<Dashboard />} />
           </Route>
         </Routes>
       </main>

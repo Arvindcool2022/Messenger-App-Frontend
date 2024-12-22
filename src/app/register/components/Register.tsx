@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ForgotPass } from "./Forgot-pass";
+import { ForgotPass } from "../../login/components/Forgot-pass";
 import { NavLink } from "react-router";
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "../../../components/ui/radio-group";
 
 export default function Register({
   className,

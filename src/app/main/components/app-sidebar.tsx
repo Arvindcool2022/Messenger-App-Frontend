@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Mail } from "lucide-react";
 
-import { SearchForm } from "@/components/search-form";
+import { SearchForm } from "@/app/main/components/search-form";
 import {
   Sidebar,
   SidebarContent,
@@ -13,8 +13,8 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { NavLink } from "react-router";
-import { Separator } from "./ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
 
 // This is sample data.
 const data = {
@@ -50,11 +50,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-teal-800 text-primary-foreground dark:bg-teal-300">
                   <Mail className="size-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">Messenger</span>
+                  <span className="font-semibold"> Messenger Inc.</span>
                 </div>
               </a>
             </SidebarMenuButton>
