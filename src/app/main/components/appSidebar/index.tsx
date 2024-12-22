@@ -1,7 +1,6 @@
 import * as React from "react";
-import { Mail } from "lucide-react";
-
-import { SearchForm } from "@/app/main/components/search-form";
+import { NavLink, useParams } from "react-router";
+import { SearchForm } from "@/app/main/components/appSidebar/search-form";
 import {
   Sidebar,
   SidebarContent,
@@ -12,37 +11,16 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { NavLink } from "react-router";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-
-// This is sample data.
-const data = {
-  navMain: [
-    {
-      title: "Arvind",
-      url: String(Math.round(Math.random() * 100000000)),
-    },
-    {
-      title: "Nandini",
-      url: String(Math.round(Math.random() * 100000000)),
-    },
-    {
-      title: "Akaash",
-      url: String(Math.round(Math.random() * 100000000)),
-    },
-    {
-      title: "john",
-      url: String(Math.round(Math.random() * 100000000)),
-    },
-    {
-      title: "jane",
-      url: String(Math.round(Math.random() * 100000000)),
-    },
-  ],
-};
+import { useAllUsers } from "../../hooks/useAllUsers";
+import { useCurrentUser } from "../../hooks/useCurrentUer";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { id } = useParams();
+  const { data: alluserData } = useAllUsers();
+  const { data: userData } = useCurrentUser();
+  //   <SidebarMenuSkeleton showIcon />
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -50,11 +28,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-teal-800 text-primary-foreground dark:bg-teal-300">
-                  <Mail className="size-4" />
-                </div>
+                <Avatar className="me-4 h-8 w-8">
+                  <AvatarImage src={userData?.profilepic} />
+                  <AvatarFallback>[pic]</AvatarFallback>
+                </Avatar>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold"> Chattr Inc.</span>
+                  <span className="font-semibold">{userData?.fullname}</span>
                 </div>
               </a>
             </SidebarMenuButton>
@@ -65,16 +44,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-            {data.navMain.map((item, index) => (
-              <div key={index + item.title}>
+            {alluserData?.map((item: any) => (
+              <div key={item.id}>
                 <SidebarMenuItem>
-                  <SidebarMenuButton className="py-6 text-xl capitalize">
+                  <SidebarMenuButton
+                    className="py-6 text-xl capitalize"
+                    isActive={item.id === id}
+                  >
                     <Avatar className="me-4 h-6 w-6">
-                      <AvatarImage src="https://avatar.iran.liara.run/public" />
+                      <AvatarImage src={item.profilepic} />
                       <AvatarFallback>[pic]</AvatarFallback>
                     </Avatar>
 
-                    <NavLink to={`/app/${item.url}`}>{item.title}</NavLink>
+                    <NavLink to={`/app/${item.id}`}>{item.fullname}</NavLink>
                   </SidebarMenuButton>
                   <Separator />
                 </SidebarMenuItem>

@@ -6,8 +6,7 @@ import { Label } from "@/components/ui/label";
 import { NavLink } from "react-router";
 import { RadioGroup, RadioGroupItem } from "../../../components/ui/radio-group";
 import { useForm, UseFormReturn } from "react-hook-form";
-import { z } from "zod";
-import { signupResolvers } from "../resolvers";
+import { SignupData, signupResolvers } from "../resolvers";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -18,12 +17,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { ReactNode } from "react";
+import useRegister from "../hooks/useRegister";
 
 export default function Register({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const form = useForm<z.infer<typeof signupResolvers>>({
+  const form = useForm<SignupData>({
     resolver: zodResolver(signupResolvers),
     defaultValues: {
       username: "",
@@ -33,11 +33,13 @@ export default function Register({
       cpassword: "",
     },
   });
-  function onSubmit(values: z.infer<typeof signupResolvers>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-    form.reset();
+
+  const mutation = useRegister(form.reset);
+  async function onSubmit(values: SignupData) {
+    try {
+      console.log(values);
+      await mutation.mutate(values);
+    } catch (error) {}
   }
 
   return (
@@ -106,7 +108,7 @@ export default function Register({
                   ></FormFieldConstructor>
 
                   <Button type="submit" className="w-full">
-                    Login
+                    Signup
                   </Button>
                 </div>
               </div>
@@ -128,7 +130,7 @@ export default function Register({
   );
 }
 
-type nameSchema = keyof z.infer<typeof signupResolvers>;
+type nameSchema = keyof SignupData;
 
 interface TFormFieldConstructor {
   form: UseFormReturn<

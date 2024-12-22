@@ -34,3 +34,5 @@ export const signupResolvers = z
       });
     }
   });
+
+export type SignupData = z.infer<typeof signupResolvers>;

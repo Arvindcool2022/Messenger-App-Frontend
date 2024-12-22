@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { ReactNode } from "react";
+import uselogin from "../hooks/useLogin";
 
 export default function LoginForm({
   className,
@@ -27,9 +28,11 @@ export default function LoginForm({
     defaultValues: { username: "", password: "" },
   });
 
+  const mutation = uselogin(form.reset);
+
   function onSubmit(values: z.infer<typeof loginResolvers>) {
     console.log(values);
-    form.reset();
+    mutation.mutate(values);
   }
 
   return (
