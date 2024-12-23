@@ -53,7 +53,6 @@ export function ThemeProvider({
     setTheme: () => {
       const index = theme === "dark" ? 1 : 0;
       const theme1 = themeArr[index];
-      console.log(theme, index, theme1);
       localStorage.setItem(storageKey, theme1);
       setTheme(theme1);
     },

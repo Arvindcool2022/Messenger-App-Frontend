@@ -50,13 +50,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <SidebarMenuButton
                     className="py-6 text-xl capitalize"
                     isActive={item.id === id}
+                    asChild
                   >
-                    <Avatar className="me-4 h-6 w-6">
-                      <AvatarImage src={item.profilepic} />
-                      <AvatarFallback>[pic]</AvatarFallback>
-                    </Avatar>
-
-                    <NavLink to={`/app/${item.id}`}>{item.fullname}</NavLink>
+                    <NavLink to={`/app/${item.id}`}>
+                      <Avatar className="me-4 h-6 w-6">
+                        <AvatarImage src={item.profilepic} />
+                        <AvatarFallback>[pic]</AvatarFallback>
+                      </Avatar>
+                      <span>{item.fullname}</span>
+                    </NavLink>
                   </SidebarMenuButton>
                   <Separator />
                 </SidebarMenuItem>
