@@ -35,11 +35,10 @@ export default function Register({
   });
 
   const mutation = useRegister(form.reset);
+
   async function onSubmit(values: SignupData) {
-    try {
-      console.log(values);
-      await mutation.mutate(values);
-    } catch (error) {}
+    console.log(values);
+    mutation.mutate(values);
   }
 
   return (

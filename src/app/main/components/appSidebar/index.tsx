@@ -19,18 +19,18 @@ import { useLogout } from "../../hooks/useLogout";
 import { ComponentProps, useState } from "react";
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
-  const { id } = useParams();
   const [search, setSearch] = useState("");
+  const { id } = useParams();
   const { data: alluserData } = useAllUsers();
-  const filteredUserData = alluserData?.filter((item) => {
-    if (!search) return item;
-    return item.fullname.includes(search);
-  });
   const { data: userData } = useCurrentUser();
   const { mutate } = useLogout();
   const handleLogout = () => {
     mutate();
   };
+  const filteredUserData = alluserData?.filter((item) => {
+    if (!search) return item;
+    return item.fullname.includes(search);
+  });
   //   <SidebarMenuSkeleton showIcon />
   return (
     <Sidebar {...props}>

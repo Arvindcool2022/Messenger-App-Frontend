@@ -20,25 +20,26 @@ import { useCurrentUser } from "./hooks/useCurrentUer";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function Page() {
-  const { id } = useParams();
   const [message, setMessage] = useState("");
-  const { data: profileData } = useCurrentUser();
+  const { id } = useParams();
   const { data: alluserData } = useAllUsers();
-  const currentPageUserData = (alluserData ?? [])
-    .filter((item) => item.id === id)
-    .at(0);
-  const { data, error, isPending } = useGetCurrentConv(id);
+  const { data: profileData } = useCurrentUser();
+  const { data } = useGetCurrentConv(id);
   const clearInput = () => {
     setMessage("");
   };
-
   const mutation = useSendMessages(clearInput);
+
+  const currentPageUserData = (alluserData ?? [])
+    .filter((item) => item.id === id)
+    .at(0);
 
   const handleSubmit = () => {
     if (!message) return toast.error("Can't send an empty message");
     if (!id) return;
     mutation.mutate({ id, message });
   };
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -69,9 +70,9 @@ export default function Page() {
                   <div className="p-4" key={item.id}>
                     <div
                       className={cn(
-                        "w-fit max-w-3xl rounded-md border bg-teal-900 p-4",
+                        "bg-chat-primary w-fit max-w-3xl rounded-md border p-4",
                         {
-                          "ms-auto bg-emerald-900":
+                          "bg-chat-secondary ms-auto":
                             item.senderId === profileData?.id,
                         },
                       )}

@@ -16,7 +16,9 @@ export function ThemeToggle({ className = "" }: { className?: string }) {
         variant="ghost"
         size="icon"
         onClick={() => {
-          setTheme();
+          setTimeout(() => {
+            setTheme();
+          }, 500);
           if (!audioRef.current) return;
 
           audioRef.current.src = theme === "dark" ? lightOn : lightOff;

@@ -12,7 +12,7 @@ interface RegisterResponse {
 }
 
 export const useSendMessages = (clearInput: () => void) => {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
 
   return useMutation({
     mutationFn: ({ id, message }: { id: string; message: string }) =>
@@ -28,7 +28,7 @@ export const useSendMessages = (clearInput: () => void) => {
       console.log("Message sent successfully:", data);
       toast.success("Message sent successfully: " + data.body);
       clearInput();
-      queryClient.invalidateQueries({ queryKey: ["conv", variables.id] });
+      qc.invalidateQueries({ queryKey: ["conv", variables.id] });
     },
   });
 };
