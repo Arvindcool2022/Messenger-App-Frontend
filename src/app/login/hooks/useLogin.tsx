@@ -13,7 +13,6 @@ const uselogin = (reset: () => void) => {
   return useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      console.log("login successful:", data.data, data.status);
       toast.success("login successful: " + data.status);
       reset();
       navigate("/app");

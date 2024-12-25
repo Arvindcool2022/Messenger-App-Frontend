@@ -1,6 +1,7 @@
 import axios from "@/axios";
-import { useMutation } from "@tanstack/react-query";
-import { useParams } from "react-router";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+
 interface RegisterResponse {
   id: string;
   createdAt: Date;
@@ -9,15 +10,35 @@ interface RegisterResponse {
   conversationsIds: string;
   body: string;
 }
-export const useSendMessages = (id: string | undefined) => {
-  if (!id) return Error("receiver id not found");
+
+export const useSendMessages = (clearInput: () => void) => {
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: sendMessage,
-    onError(error, variables, context) {},
-    onSuccess(data, variables, context) {},
+    mutationFn: ({ id, message }: { id: string; message: string }) =>
+      sendMessage(id, message),
+    onError: (error: unknown, variables: { id: string; message: string }) => {
+      console.error("Error sending message:", error);
+      toast.error("Error sending message: " + variables.message);
+    },
+    onSuccess: (
+      data: RegisterResponse,
+      variables: { id: string; message: string },
+    ) => {
+      console.log("Message sent successfully:", data);
+      toast.success("Message sent successfully: " + data.body);
+      clearInput();
+      queryClient.invalidateQueries({ queryKey: ["conv", variables.id] });
+    },
   });
 };
 
-async function sendMessage(data: { message: string }) {
-  return await axios.post<RegisterResponse>("message/send/:id", data);
+async function sendMessage(id: string, message: string) {
+  if (!id) throw new Error("Receiver ID not found");
+  if (!message) throw new Error("Message can't be empty");
+
+  const data = { message };
+  console.log(data);
+  const res = await axios.post<RegisterResponse>(`message/send/${id}`, data);
+  return res.data;
 }

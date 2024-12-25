@@ -5,13 +5,13 @@ import { useLocation, useNavigate } from "react-router";
 export const AuthRedirect = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { data: alluserData, error } = useAllUsers();
+  const { isError, isSuccess } = useAllUsers();
 
   useEffect(() => {
-    if (alluserData && ["/signup", "/login"].includes(location.pathname))
+    if (["/signup", "/login"].includes(location.pathname) && !isError)
       navigate("/app");
 
-    if (error && location.pathname.startsWith("/app")) navigate("/login");
-  }, [alluserData, error, location.pathname, navigate]);
+    if (isError && location.pathname.startsWith("/app")) navigate("/login");
+  }, [isSuccess, isError]);
   return null;
 };

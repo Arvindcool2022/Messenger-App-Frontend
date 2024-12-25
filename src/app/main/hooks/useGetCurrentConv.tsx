@@ -4,6 +4,7 @@ type TMessages = {
   createdAt: Date;
   senderId: string;
   body: string;
+  id: string;
 }[];
 
 interface Response {
@@ -24,5 +25,6 @@ export const useGetCurrentConv = (id: string | undefined) => {
 
 async function getConv(id: string | undefined) {
   const res = await axios.get<Response>(`message/${id}`);
+
   return res.data;
 }

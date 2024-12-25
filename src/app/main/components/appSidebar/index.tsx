@@ -1,4 +1,3 @@
-import * as React from "react";
 import { NavLink, useParams } from "react-router";
 import { SearchForm } from "@/app/main/components/appSidebar/search-form";
 import {
@@ -15,11 +14,23 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { useAllUsers } from "../../hooks/useAllUsers";
 import { useCurrentUser } from "../../hooks/useCurrentUer";
+import { Button } from "@/components/ui/button";
+import { useLogout } from "../../hooks/useLogout";
+import { ComponentProps, useState } from "react";
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const { id } = useParams();
+  const [search, setSearch] = useState("");
   const { data: alluserData } = useAllUsers();
+  const filteredUserData = alluserData?.filter((item) => {
+    if (!search) return item;
+    return item.fullname.includes(search);
+  });
   const { data: userData } = useCurrentUser();
+  const { mutate } = useLogout();
+  const handleLogout = () => {
+    mutate();
+  };
   //   <SidebarMenuSkeleton showIcon />
   return (
     <Sidebar {...props}>
@@ -35,16 +46,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-semibold">{userData?.fullname}</span>
                 </div>
+                <Button
+                  onClick={handleLogout}
+                  size="sm"
+                  variant="destructive"
+                  className="ms-auto h-6 rounded-sm px-1"
+                >
+                  logout
+                </Button>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-        <SearchForm />
+        <SearchForm setSearch={setSearch} search={search} />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-            {alluserData?.map((item: any) => (
+            {filteredUserData?.map((item: any) => (
               <div key={item.id}>
                 <SidebarMenuItem>
                   <SidebarMenuButton
