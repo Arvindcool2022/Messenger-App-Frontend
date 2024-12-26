@@ -16,12 +16,15 @@ import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { Messages } from "./components/messages";
 import { useCurrentUser } from "./hooks/useCurrentUer";
+import { useChatScroll } from "./hooks/useChatScroll";
 
 export default function Page() {
   const [message, setMessage] = useState("");
   const { id } = useParams();
   const { data: alluserData } = useAllUsers();
   const { data: profileData } = useCurrentUser();
+  const ref = useChatScroll();
+
   const clearInput = () => {
     setMessage("");
   };
@@ -36,12 +39,16 @@ export default function Page() {
     if (!id) return;
     mutation.mutate({ id, message });
   };
-  // console.log("profileData", profileData);
+
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <section className="relative min-h-screen">
+        <section
+          className="relative min-h-screen overflow-y-auto"
+          //@ts-ignore
+          ref={ref} //not working
+        >
           <header className="sticky left-0 right-0 top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
             <SidebarTrigger className="-ml-1 h-16 w-16 [&_svg]:size-8" />
             <Separator orientation="vertical" className="mr-2 h-4" />

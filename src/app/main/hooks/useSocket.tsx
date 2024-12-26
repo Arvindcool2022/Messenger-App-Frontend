@@ -3,7 +3,9 @@ import { io, Socket } from "socket.io-client";
 import { useCurrentUser } from "./useCurrentUer";
 
 const serverDomain =
-  import.meta.env.MODE === "development" ? "http://localhost:9000" : "/";
+  import.meta.env.MODE === "development"
+    ? "http://localhost:9000"
+    : import.meta.env.VITE_SOCKET;
 
 export const useSocket = () => {
   const socketRef = useRef<Socket | null>(null);
