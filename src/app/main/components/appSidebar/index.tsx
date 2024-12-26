@@ -16,22 +16,28 @@ import { useAllUsers } from "../../hooks/useAllUsers";
 import { useCurrentUser } from "../../hooks/useCurrentUer";
 import { Button } from "@/components/ui/button";
 import { useLogout } from "../../hooks/useLogout";
-import { ComponentProps, useState } from "react";
+import { ComponentProps, useEffect, useState } from "react";
 import { useOnlineUser } from "../../hooks/useOnlineusers";
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const [search, setSearch] = useState("");
   const { id } = useParams();
-  const { data: alluserData } = useAllUsers();
+  const { data: alluserData, isLoading: alluserIsLoading } = useAllUsers();
   const { data: userData } = useCurrentUser();
   const onlineUsers = useOnlineUser();
   const { mutate } = useLogout();
   const handleLogout = () => {
     mutate();
   };
-  alluserData?.forEach((user) => {
-    user.isOnline = onlineUsers.includes(user.id);
-  });
+
+  useEffect(() => {
+    if (!alluserIsLoading && alluserData) {
+      alluserData.forEach((user) => {
+        user.isOnline = onlineUsers.includes(user.id);
+      });
+    }
+  }, [alluserIsLoading, alluserData, onlineUsers]);
+
   const filteredUserData = alluserData?.filter((item) => {
     if (!search) return item;
     return item.fullname.includes(search);

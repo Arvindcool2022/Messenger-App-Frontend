@@ -7,15 +7,19 @@ export const useOnlineUser = () => {
 
   useEffect(() => {
     if (socket) {
+      console.log("added getAllOnlineUsers");
       socket.on("getAllOnlineUsers", (users: string[]) => {
+        console.log("getAllOnlineUsers", users);
         setOnlineUser(users);
       });
 
       return () => {
         socket.off("getAllOnlineUsers");
+        console.log("removed getAllOnlineUsers");
       };
     }
   }, [socket]);
+
   console.log("onlineUsers", onlineUsers);
   return onlineUsers;
 };
