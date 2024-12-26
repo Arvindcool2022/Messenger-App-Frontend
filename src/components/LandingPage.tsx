@@ -1,6 +1,13 @@
-import { NavLink } from "react-router";
+import { useEffect } from "react";
+import { NavLink, useNavigate } from "react-router";
 
 const LandingPage = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (import.meta.env.PROD) navigate("/login");
+  }, []);
+
   return (
     <>
       <h1 className="text-6xl">Some landing page</h1>
