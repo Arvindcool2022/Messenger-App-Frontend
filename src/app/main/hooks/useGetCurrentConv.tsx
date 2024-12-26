@@ -1,11 +1,13 @@
 import axios from "@/axios";
 import { useQuery } from "@tanstack/react-query";
-type TMessages = {
+import { useParams } from "react-router";
+
+export type TMessages = {
   createdAt: Date;
   senderId: string;
   body: string;
   id: string;
-}[];
+};
 
 interface Response {
   id: string;
@@ -13,9 +15,11 @@ interface Response {
   modifiedAt: Date;
   participantIDs: string[];
   messageIDs: string[];
-  messages: TMessages;
+  messages: TMessages[];
 }
-export const useGetCurrentConv = (id: string | undefined) => {
+export const useGetCurrentConv = () => {
+  const { id } = useParams();
+
   return useQuery({
     queryKey: ["conv", id],
     enabled: !!id,

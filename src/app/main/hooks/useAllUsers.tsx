@@ -2,6 +2,7 @@ import axios from "@/axios";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 interface RegisterResponse {
+  isOnline?: boolean;
   fullname: string;
   id: string;
   profilepic: string;

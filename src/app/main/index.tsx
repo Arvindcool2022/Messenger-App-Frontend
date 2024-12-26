@@ -8,23 +8,18 @@ import { useParams } from "react-router";
 import { AppSidebar } from "./components/appSidebar";
 import { useAllUsers } from "./hooks/useAllUsers";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Send } from "lucide-react";
-import { useGetCurrentConv } from "./hooks/useGetCurrentConv";
 import { useSendMessages } from "./hooks/useSendMessages";
 import { useState } from "react";
 import { toast } from "sonner";
-import { useCurrentUser } from "./hooks/useCurrentUer";
 import { Textarea } from "@/components/ui/textarea";
+import { Messages } from "./components/messages";
 
 export default function Page() {
   const [message, setMessage] = useState("");
   const { id } = useParams();
   const { data: alluserData } = useAllUsers();
-  const { data: profileData } = useCurrentUser();
-  const { data } = useGetCurrentConv(id);
   const clearInput = () => {
     setMessage("");
   };
@@ -39,7 +34,6 @@ export default function Page() {
     if (!id) return;
     mutation.mutate({ id, message });
   };
-
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -61,30 +55,7 @@ export default function Page() {
             )}
           </header>
           <div className="flex min-h-screen flex-1 flex-col gap-4 p-4">
-            {!data ? (
-              <MessageSkeleton />
-            ) : (
-              data.messages.map((item) => {
-                // if(item.senderId === id)
-                return (
-                  <div className="p-4" key={item.id}>
-                    <div
-                      className={cn(
-                        "bg-chat-primary w-fit max-w-3xl rounded-md border p-4",
-                        {
-                          "bg-chat-secondary ms-auto":
-                            item.senderId === profileData?.id,
-                        },
-                      )}
-                    >
-                      {item.body.split("\n").map((sentence) => (
-                        <p>{sentence}</p>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })
-            )}
+            <Messages />
           </div>
           <div className="sticky bottom-0 left-0 right-0 flex items-center space-x-2 bg-inherit px-2 py-4">
             <Textarea
@@ -108,23 +79,5 @@ export default function Page() {
         </section>
       </SidebarInset>
     </SidebarProvider>
-  );
-}
-
-function MessageSkeleton() {
-  return (
-    <>
-      {Array.from({ length: 9 }).map((_, i) => {
-        return (
-          <Skeleton
-            key={i}
-            className={cn("h-10 w-52 rounded-3xl", {
-              "h-20 w-80": !(i % 5),
-              "self-end": i & 1,
-            })}
-          />
-        );
-      })}
-    </>
   );
 }

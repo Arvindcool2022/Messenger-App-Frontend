@@ -17,21 +17,25 @@ import { useCurrentUser } from "../../hooks/useCurrentUer";
 import { Button } from "@/components/ui/button";
 import { useLogout } from "../../hooks/useLogout";
 import { ComponentProps, useState } from "react";
+import { useOnlineUser } from "../../hooks/useOnlineusers";
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const [search, setSearch] = useState("");
   const { id } = useParams();
   const { data: alluserData } = useAllUsers();
   const { data: userData } = useCurrentUser();
+  const onlineUsers = useOnlineUser();
   const { mutate } = useLogout();
   const handleLogout = () => {
     mutate();
   };
+  alluserData?.forEach((user) => {
+    user.isOnline = onlineUsers.includes(user.id);
+  });
   const filteredUserData = alluserData?.filter((item) => {
     if (!search) return item;
     return item.fullname.includes(search);
   });
-  //   <SidebarMenuSkeleton showIcon />
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -63,7 +67,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <SidebarGroup>
           <SidebarMenu>
-            {filteredUserData?.map((item: any) => (
+            {filteredUserData?.map((item) => (
               <div key={item.id}>
                 <SidebarMenuItem>
                   <SidebarMenuButton
@@ -77,6 +81,9 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
                         <AvatarFallback>[pic]</AvatarFallback>
                       </Avatar>
                       <span>{item.fullname}</span>
+                      {item.isOnline && (
+                        <div className="right-0 top-0 z-20 ms-auto h-2 w-2 rounded-full bg-green-500" />
+                      )}
                     </NavLink>
                   </SidebarMenuButton>
                   <Separator />
